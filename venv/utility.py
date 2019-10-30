@@ -1,13 +1,23 @@
 import os, subprocess, platform
+import scandir
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QDialog, QApplication, QListWidgetItem, \
     QHBoxLayout, QVBoxLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
 
-# dirpath = "/Users"
+#dirpath = "/Users"
 
 dirpath = "../"
+entries = []
+
+class dao:
+    def __init__(self, icon, fileType, path, fileName):
+        self.icon = icon
+        self.fileType = fileType
+        self.path = path
+        self.fileName = fileName
+
 
 
 def showMessage(self):
@@ -27,19 +37,57 @@ def showMessage(self):
 
 
 def getFileResult(self, userInput):
-    entries = []
+    entries1 = []
     print("------------")
-    for r, d, f in os.walk(dirpath):
-        for file in f:
-            if userInput in file:
-                entries.append(os.path.join(r, file))
+    if not entries:
+        for r, d, f in scandir.walk(dirpath):
+            for file in f:
+                icon = "sample.png"
+                file_type = "unkown"
+                if str(file).endswith("py"):
+                    file_type = "py"
+                    icon = "py.png"
+                if str(file).endswith("docx"):
+                    file_type = "docx"
+                    icon = "word.png"
+                if str(file).endswith("doc"):
+                    file_type = "doc"
+                    icon = "word.png"
+                if str(file).endswith("txt"):
+                    file_type = "txt"
+                    icon = "txt.png"
+                if str(file).endswith("pdf"):
+                    file_type = "pdf"
+                    icon = "pdf.png"
+                if str(file).endswith("png"):
+                    file_type = "png"
+                    icon = "sample.png"
+                path = os.path.join(r, file)
+                fileName = file
+                if file_type != "unkown":
+                    entries.append(dao(icon, file_type, path, fileName))
+
+
+
+
+    for file in entries:
+
+
+
+        print(file.fileType)
+        if userInput in file.fileName:
+            entries1.append(file)
+
+    print(entries1.count)
     print(dirpath)
     print("------------")
+
+
     foundpath = ""
-    for f in entries:
-        foundpath = f
-        print(userInput + ":  " + f)
-    return entries
+    # for f in entries:
+    #     foundpath = f
+    #     print(userInput + ":  " + f)
+    return entries1
 
 
 def run(self, path):
