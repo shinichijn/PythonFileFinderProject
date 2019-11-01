@@ -8,8 +8,9 @@ from PyQt5.QtCore import QSize
 
 #dirpath = "/Users"
 
-dirpath = "../"
+dirpath = "../../"
 entries = []
+
 
 class dao:
     def __init__(self, icon, fileType, path, fileName):
@@ -20,11 +21,11 @@ class dao:
 
 
 
-def showMessage(self):
+def showMessage(self, msg = "No application knows how to open the file"):
     dlg = QDialog(self)
     dlg.setWindowTitle("Error Message")
     textField = QtWidgets.QTextEdit()
-    textField.setPlainText("No application knows how to open the file")
+    textField.setPlainText(msg)
     textField.setReadOnly(True)
     textField.setMaximumHeight(50)
     layout = QVBoxLayout()
@@ -38,7 +39,6 @@ def showMessage(self):
 
 def getFileResult(self, userInput):
     entries1 = []
-    print("------------")
     if not entries:
         for r, d, f in scandir.walk(dirpath):
             for file in f:
@@ -59,30 +59,16 @@ def getFileResult(self, userInput):
                 if str(file).endswith("pdf"):
                     file_type = "pdf"
                     icon = "pdf.png"
-                if str(file).endswith("png"):
-                    file_type = "png"
-                    icon = "sample.png"
+                if str(file).endswith("png") or str(file).endswith("jpg"):
+                    file_type = "jpg/png"
+                    icon = "image.png"
                 path = os.path.join(r, file)
                 fileName = file
                 if file_type != "unkown":
                     entries.append(dao(icon, file_type, path, fileName))
-
-
-
-
     for file in entries:
-
-
-
-        print(file.fileType)
         if userInput in file.fileName:
             entries1.append(file)
-
-    print(entries1.count)
-    print(dirpath)
-    print("------------")
-
-
     foundpath = ""
     # for f in entries:
     #     foundpath = f
@@ -94,12 +80,9 @@ def run(self, path):
     foundpath = path
     if platform.system() == 'Darwin':
         result = subprocess.call(("open", foundpath))  # macOS
-        print(result)
         if result == 1:
             showMessage(self)
     elif platform.system() == 'Windows':
         result = os.startfile(foundpath)
-        print(result)
     else:
         result = subprocess.call(("xdg-open", foundpath))
-        print(result)
