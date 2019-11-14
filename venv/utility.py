@@ -37,35 +37,44 @@ def showMessage(self, msg = "No application knows how to open the file"):
     dlg.exec_()
 
 
+
+def fetchPath(path):
+    for r, d, f in scandir.walk(path):
+        for file in f:
+            icon = "sample.png"
+            file_type = "unkown"
+            if str(file).endswith("py"):
+                file_type = "py"
+                icon = "py.png"
+            if str(file).endswith("docx"):
+                file_type = "docx"
+                icon = "word.png"
+            if str(file).endswith("doc"):
+                file_type = "doc"
+                icon = "word.png"
+            if str(file).endswith("txt"):
+                file_type = "txt"
+                icon = "txt.png"
+            if str(file).endswith("pdf"):
+                file_type = "pdf"
+                icon = "pdf.png"
+            if str(file).endswith("png") or str(file).endswith("jpg"):
+                file_type = "jpg/png"
+                icon = "image.png"
+            path = os.path.join(r, file)
+            fileName = file
+            if file_type != "unkown":
+                entries.append(dao(icon, file_type, path, fileName))
+
 def getFileResult(self, userInput):
     entries1 = []
     if not entries:
-        for r, d, f in scandir.walk(dirpath):
-            for file in f:
-                icon = "sample.png"
-                file_type = "unkown"
-                if str(file).endswith("py"):
-                    file_type = "py"
-                    icon = "py.png"
-                if str(file).endswith("docx"):
-                    file_type = "docx"
-                    icon = "word.png"
-                if str(file).endswith("doc"):
-                    file_type = "doc"
-                    icon = "word.png"
-                if str(file).endswith("txt"):
-                    file_type = "txt"
-                    icon = "txt.png"
-                if str(file).endswith("pdf"):
-                    file_type = "pdf"
-                    icon = "pdf.png"
-                if str(file).endswith("png") or str(file).endswith("jpg"):
-                    file_type = "jpg/png"
-                    icon = "image.png"
-                path = os.path.join(r, file)
-                fileName = file
-                if file_type != "unkown":
-                    entries.append(dao(icon, file_type, path, fileName))
+        dirs = [d for d in os.listdir(dirpath) if os.path.isdir(os.path.join(dirpath, d))]
+        for file in dirs:
+            print(file)
+            if (file == 'test'):
+                fetchPath(dirpath + '/' + file)
+
     for file in entries:
         if userInput in file.fileName:
             entries1.append(file)
